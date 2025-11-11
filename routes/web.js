@@ -9,6 +9,7 @@ import UserViewController from '../app/Http/Controllers/User/UserViewController.
 import JwtVerifyViewMiddleware from '../app/Http/Middlewares/JwtVerifyViewMiddleware.js';
 import ViewProductController from '../app/Http/Controllers/Product/ViewProductController.js';
 import ViewExampleController from '../app/Http/Controllers/ViewExampleController.js';
+import ViewUploadTestController from '../app/Http/Controllers/ViewUploadTestController.js';
 
 export default (function () {
 
@@ -19,6 +20,8 @@ export default (function () {
     router.get('/products', JwtVerifyViewMiddleware, ViewProductController);
 
     router.get('/examples', JwtVerifyViewMiddleware, ViewExampleController);
+
+    router.get('/upload-test', ViewUploadTestController);
 
     /** Servir o public estaticamente, tanto para arquivos como para os assets de frontend */
     // NÃO SERÁ CHAMADO CASO TENHA A CAMADA DE NGINX COM ARQUIVOS ESTÁTICOS
