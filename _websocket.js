@@ -3,7 +3,10 @@ import chalk from "chalk";
 import { getConnection } from "./config/rabbit.js"; // ajusta o caminho se precisar
 
 const SOCKET_PORT = Number(process.env.SOCKET_PORT ?? 8081);
-const EXCHANGE_NAME = "websocket";
+
+// pega --exchange=room da CLI, se existir
+const exchangeArg = process.argv.find((arg) => arg.startsWith("--exchange="));
+const EXCHANGE_NAME = exchangeArg ? exchangeArg.split("=")[1] : "websocket";
 
 const websocket = new WebSocketServer({ port: SOCKET_PORT });
 
@@ -77,7 +80,6 @@ async function setupRabbitWebsocketBridge() {
                         text: data.text,
                     });
                 } else {
-                    // Se quiser, pode só repassar cru
                     console.log("[Rabbit] Tipo desconhecido vindo da fila:", data);
                 }
 
@@ -155,7 +157,6 @@ websocket.on("connection", (ws) => {
     ws.on("close", () => {
         console.log(chalk.gray("Cliente desconectado."));
         if (ws.userName) {
-            // em vez de broadcast direto, manda um evento de "leave" pra fila
             publishToRabbit({
                 type: "leave",
                 name: ws.userName,
@@ -165,5 +166,7 @@ websocket.on("connection", (ws) => {
 });
 
 console.log(
-    chalk.greenBright(`WebSocket rodando na porta ${SOCKET_PORT}...`)
+    chalk.greenBright(
+        `WebSocket rodando na porta ${SOCKET_PORT} usando exchange "${EXCHANGE_NAME}"...`
+    )
 );
