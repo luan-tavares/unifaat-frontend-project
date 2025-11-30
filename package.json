@@ -6,11 +6,18 @@
     "dev": "nodemon _server.js",
     "watch": "vite build --watch"
   },
+  "mcpServers": {
+    "devweb-mcp-http": {
+      "transport": "http",
+      "url": "https://mcp"
+    }
+  },
   "type": "module",
   "author": "Luan Tavares",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.23.0",
     "amqplib": "^0.10.9",
     "axios": "^1.9.0",
     "bcrypt": "^6.0.0",
