@@ -5,18 +5,22 @@ import FirstJob from "../Jobs/FirstJob.js";
 
 export function broadcastMessage(server) {
     server.registerTool(
+        "broadcastMessage", // ← string, é isso que o SDK espera
+
         {
-            name: "broadcastMessage",
             description: "Envia uma mensagem para todos os clientes conectados.",
-            // Aqui é Zod, não JSON Schema
+            // Agora é Zod, não JSON Schema
             inputSchema: z.object({
                 name: z.string().optional(),
                 text: z.string(),
             }),
         },
+
+        // Handler
         async (args, ctx) => {
             const { name = "anonymous", text } = args;
 
+            // dispara o job para mandar via socket
             await FirstJob.dispatchSocket({
                 type: "message",
                 name,
