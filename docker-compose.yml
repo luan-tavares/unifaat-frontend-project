@@ -49,6 +49,26 @@ services:
         aliases:
             - nodeweb_host
 
+  #NODE MCP
+  nodemcp-container:
+    build:
+      context: .
+      dockerfile: docker/node24-mcp/Dockerfile.dev
+    env_file: 
+      - .env
+      - .env.docker
+    volumes:
+      - .:/app
+      - nodemodules-project-volume:/app/node_modules
+    restart: unless-stopped
+    depends_on:
+      - postgres-container
+      - rabbitmq-container
+    networks:
+      app-network:
+        aliases:
+            - nodemcp_host
+
   #NODE CLI
   nodecli-container:
     build:

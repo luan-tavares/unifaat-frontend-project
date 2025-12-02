@@ -13,14 +13,7 @@ export default async function createWorker(dir) {
     /** Registro dos jobs */
     const jobMap = await registerJobs(dir);
 
-    /**
-     * listen(queue, type)
-     *
-     * queue: nome da fila (string)
-     * type:
-     *   - undefined  => worker normal (consome direto da fila)
-     *   - 'websocket' => worker ligado num exchange fanout
-     */
+
     async function listen(queue = 'default', exchange = undefined) {
 
         const channel = await getConnection();
@@ -29,7 +22,7 @@ export default async function createWorker(dir) {
         await channel.assertQueue(queue, { durable: true });
 
         // se for worker "websocket", ligar num exchange fanout
-        if (exchange !== null) {
+        if (exchange !== undefined) {
 
             await channel.assertExchange(exchange, 'fanout', { durable: true });
             await channel.bindQueue(queue, exchange, '');
@@ -76,7 +69,7 @@ export default async function createWorker(dir) {
         });
 
         console.log(`[WORKER] Fila: "${queue}"`);
-        console.log(`[WORKER] Tipo: ${type || 'normal'}`);
+        console.log(`[WORKER] Exchange: ${exchange || 'normal'}`);
     }
 
     return { listen };
